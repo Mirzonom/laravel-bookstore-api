@@ -14,7 +14,6 @@ class OrderController extends Controller
         'user_id' => 'required|integer|exists:users,id',
         'total' => 'required|numeric|min:0',
         'status' => 'required|integer|in:' . STATUS_STATE::ACTIVE . ',' . STATUS_STATE::DEACTIVATED,
-
     ];
 
     public function index()
@@ -52,14 +51,27 @@ class OrderController extends Controller
 
 
     // Order Item
+
+    private $orderItemValidationRules = [
+        'order_id' => 'required|integer|exists:orders,id',
+        'book_id' => 'required|integer|exists:books,id',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+    ];
+
+    public function getItems(Order $order)
+    {
+        $items = $order->orderItems;
+        return response()->json($items);
+    }
+
     public function addItem(Request $request, Order $order)
     {
-        $validatedData = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
+        $validatedData = $request->validate($this->orderItemValidationRules);
 
-        $orderItem = $order->items()->create($validatedData);
+        unset($validatedData['order_id']);
+
+        $orderItem = $order->orderItems()->create(array_merge($validatedData, ['order_id' => $order->id]));
         return response()->json($orderItem, 201);
     }
 
@@ -70,8 +82,12 @@ class OrderController extends Controller
         }
 
         $validatedData = $request->validate([
-            'quantity' => 'required|integer|min:1',
+            'book_id' => 'sometimes|required|integer|exists:books,id',
+            'quantity' => 'sometimes|required|integer|min:1',
+            'price' => 'sometimes|required|numeric|min:0',
         ]);
+
+        unset($validatedData['order_id']);
 
         $orderItem->update($validatedData);
         return response()->json($orderItem);
