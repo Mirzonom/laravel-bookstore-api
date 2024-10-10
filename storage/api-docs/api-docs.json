@@ -1,0 +1,229 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel Swagger API Documenttation",
+        "contact": {
+            "email": "mirzoinom@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api/",
+            "description": "Laravel Swagger API server"
+        }
+    ],
+    "paths": {
+        "/books": {
+            "get": {
+                "tags": [
+                    "Pages"
+                ],
+                "summary": "Display a listing of the resource",
+                "operationId": "booksAll",
+                "responses": {
+                    "200": {
+                        "description": "Everything is fine"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Create yet another post in database",
+                "operationId": "bookCreate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Everithing is fine"
+                    }
+                },
+                "security": [
+                    {
+                        "app_id": []
+                    }
+                ]
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "tags": [
+                    "Pages"
+                ],
+                "summary": "Display a specific book resource",
+                "operationId": "bookShow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the book to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book found"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Update a specific book in the database",
+                "operationId": "bookUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the book to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Book updated successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                },
+                "security": [
+                    {
+                        "app_id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pages"
+                ],
+                "summary": "Delete a specific book from the database",
+                "operationId": "bookDestroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the book to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Book deleted successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    }
+                },
+                "security": [
+                    {
+                        "app_id": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookStoreRequest": {
+                "title": "Book storring request",
+                "description": "Some simple request creates as book",
+                "properties": {
+                    "title": {
+                        "title": "title",
+                        "description": "Some text field",
+                        "type": "string",
+                        "format": "string",
+                        "example": "title"
+                    },
+                    "author": {
+                        "title": "author",
+                        "description": "Some text field",
+                        "type": "string",
+                        "format": "string",
+                        "example": "test"
+                    },
+                    "description": {
+                        "title": "description",
+                        "description": "Some text field",
+                        "type": "string",
+                        "format": "string",
+                        "example": "test"
+                    },
+                    "price": {
+                        "title": "price",
+                        "description": "Some number field",
+                        "type": "number",
+                        "format": "double",
+                        "example": "123"
+                    },
+                    "stock": {
+                        "title": "stock",
+                        "description": "Some number field",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "10"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "X-APP-ID": {
+                "type": "apiKey",
+                "name": "X-APP-ID",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Pages",
+            "description": "Some example pages"
+        },
+        {
+            "name": "Post",
+            "description": "Post"
+        }
+    ]
+}
